@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: org.springframework:spring-orm:5.2.8.BUILD-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-orm/5.2.8.BUILD-SNAPSHOT/spring-orm-5.2.8.BUILD-20200717.172712-42.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-orm/5.2.8.BUILD-SNAPSHOT/spring-orm-5.2.8.BUILD-20200717.172712-42-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-orm/5.2.8.BUILD-SNAPSHOT/spring-orm-5.2.8.BUILD-20200717.172712-42-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
