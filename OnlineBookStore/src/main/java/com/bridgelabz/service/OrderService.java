@@ -27,7 +27,7 @@ public class OrderService implements IOrderService {
         Long userId=JwtGenerator.decodeJWT(token);
         List<Cart> cart = cartRepository.findByUserId(userId);
         double totalPrice= cart.stream().mapToDouble(book -> book.getPrice() * book.getQuantity()).sum();
-        Optional<Customer> customer = customerRepository.findById(userId);
+        Optional<Customer> customer = customerRepository.findByUserId(userId);
         Order order=new Order(orderId, userId, cart, totalPrice, customer.get());
         orderRepository.save(order);
         return orderId;

@@ -74,6 +74,10 @@ public class CartService implements ICartService {
         List<Cart> items = cartRepository.findByUserId(userId);
         List<Cart> selectedItems = items.stream().filter(cartItem -> cartItem.getBookId().equals(bookId))
                 .collect(Collectors.toList());
+        Optional<Book> book1 = bookstoreRepository.findById(bookId);
+        if(book1.get().getQuantity()<selectedItems.get(0).getQuantity()){
+            return cartRepository.findByUserId(userId);
+        }
         for (Cart book:selectedItems) {
             book.setQuantity(book.getQuantity()+1);
             cartRepository.save(book);

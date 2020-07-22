@@ -32,8 +32,8 @@ public class CustomerControllerTest {
 
     @Test
     public void givenCustomerDto_WhenClickOnAddCustomerDetails_ShouldReturnResponse() {
-        CustomerDto customerDto = new CustomerDto("5151001","19/451/2", "Anantapur",
-                "Near AndraBank","Home");
+        CustomerDto customerDto=new CustomerDto("Yeshwanth", "9666924586",515001,"abc", "19/451/2",
+                "Anantapur", "AndraPradesh","Near AndraBank","Home");
         String token="asdfghjkasdfghjkl";
         String response="Customer details added successfully";
         Mockito.when(customerService.addCustomerDetails(token, customerDto)).thenReturn(response);
@@ -42,7 +42,8 @@ public class CustomerControllerTest {
     }
     @Test
     public void givenToken_WhenClickOnGetCustomerDetails_ShouldReturnCustomerDetails() {
-        CustomerDto customerDto=new CustomerDto("5151001","19/451/2","Anantapur","Near AndraBank","Home");
+        CustomerDto customerDto=new CustomerDto("Yeshwanth", "9666924586",515001,"abc", "19/451/2",
+                "Anantapur", "AndraPradesh","Near AndraBank","Home");
         Customer customer = new Customer(customerDto);
         String token="asdfghjkasdfghjkl";
         Mockito.when(customerService.getCustomerDetails(token)).thenReturn(customer);

@@ -9,8 +9,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Entity
-
-
+@NoArgsConstructor
 public class Order {
 
     @Id

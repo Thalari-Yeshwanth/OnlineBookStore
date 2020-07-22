@@ -40,7 +40,8 @@ public class CustomerServiceTest {
 
         String token = JwtGenerator.createJWT(1234567);
         Long userId= JwtGenerator.decodeJWT(token);
-        CustomerDto customerDto= new CustomerDto("515001", "19/451/2,Raninagar", "Anantapur", "Near Andrabank", "Home");
+        CustomerDto customerDto=new CustomerDto("Yeshwanth", "9666924586",515001,"abc", "19/451/2",
+                "Anantapur", "AndraPradesh","Near AndraBank","Home");
         Optional<Customer> customer= Optional.of(new Customer(customerDto));
         Optional<UserModel> userDetails = Optional.of(new UserModel("Thalari Yeshwanth", "yeshwanththalari0123@gmaiil.com", "9666924586", "154G5a0124"));
         Mockito.when(userRepository.findById(userId)).thenReturn(userDetails);
@@ -52,7 +53,8 @@ public class CustomerServiceTest {
     @Test
     public void givenCustomerDetails_WhenClickOnGetCustomerDetailsShouldReturnCustomerDetails() {
         String token = JwtGenerator.createJWT(1234567l);
-        CustomerDto customerDto= new CustomerDto("515001", "19/451/2,Raninagar", "Anantapur", "Near Andrabank", "Home");
+        CustomerDto customerDto=new CustomerDto("Yeshwanth", "9666924586",515001,"abc", "19/451/2",
+                "Anantapur", "AndraPradesh","Near AndraBank","Home");
         Optional<Customer> customer= Optional.of(new Customer(customerDto));
         Mockito.when(customerRepository.findById(1234567L)).thenReturn(customer);
         Customer customerDetails = customerService.getCustomerDetails(token);

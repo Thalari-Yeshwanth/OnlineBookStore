@@ -8,35 +8,43 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-
 public class Customer {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long sequenceNo;
 
-    public Long customerId;
-    public String pinCode;
-    public String address;
-    public String cityOrTown;
-    public String landmark;
-    public String addressType;
+    private long userId;
+    private String fullName;
+    private String phoneNumber;
+    private long  pinCode;
+    private String locality;
+    private String address;
+    private String city;
+    private String state;
+    private String landMark;
+    private String locationType;
 
 
     public Customer(CustomerDto customerDto) {
-        this.pinCode=customerDto.pinCode;
-        this.address=customerDto.address;
-        this.cityOrTown =customerDto.cityorTown;
-        this.landmark=customerDto.landmark;
-        this.addressType=customerDto.addressType;
+        this.fullName=customerDto.getFullName();
+        this.phoneNumber=customerDto.getPhoneNumber();
+        this.pinCode=customerDto.getPinCode();
+        this.locality=customerDto.getLocality();
+        this.address=customerDto.getAddress();
+        this.city=customerDto.getCity();
+        this.state=customerDto.getState();
+        this.landMark=customerDto.getLandMark();
+        this.locationType=customerDto.getLocationType();
     }
 
     public Customer() {
 
     }
-
-    public void setCustomerId(Long userId) {
-        this.customerId=userId;
+    public void setUserId(long userId) {
+        this.userId=userId;
     }
 
-    public String getPinCode() {
+    public long getPinCode() {
         return this.pinCode;
     }
 }

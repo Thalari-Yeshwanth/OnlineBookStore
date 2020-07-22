@@ -36,7 +36,7 @@ public class CustomerService implements ICustomerService {
             return "Your details are already saved";
         }
         Customer customer= new Customer(customerDto);
-        customer.setCustomerId(userId);
+        customer.setUserId(userId);
         customerRepository.save(customer);
         return "Customer details added successfully";
     }

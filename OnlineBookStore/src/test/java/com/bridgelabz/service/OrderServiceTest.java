@@ -47,7 +47,8 @@ public class OrderServiceTest {
         List<Cart> cart=new ArrayList<>();
         Cart cart1=new Cart(1L,12L,12L,200.0,"TwoStates","JKRowling","http://", "abc",details);
         cart.add(cart1);
-        CustomerDto customerDto=new CustomerDto("5151001","19/451/2","Anantapur","Near AndraBank","Home");
+        CustomerDto customerDto=new CustomerDto("Yeshwanth", "9666924586",515001,"abc", "19/451/2",
+                "Anantapur", "AndraPradesh","Near AndraBank","Home");
         Optional<Customer> customer  = Optional.of(new Customer(customerDto));
         double totalPrice= cart.stream().mapToDouble(book -> book.getPrice() * book.getQuantity()).sum();
         Mockito.when(cartRepository.findByUserId(123456l)).thenReturn(cart);
@@ -63,7 +64,8 @@ public class OrderServiceTest {
     @Test
     public void given_WhenCustomerConfirmsTheOrder_ThenItShouldReturnOrderDetails(){
         List<Cart> cart=new ArrayList<>();
-        CustomerDto customerDto=new CustomerDto("5151001","19/451/2","Anantapur","Near AndraBank","Home");
+        CustomerDto customerDto=new CustomerDto("Yeshwanth", "9666924586",515001,"abc", "19/451/2",
+                "Anantapur", "AndraPradesh","Near AndraBank","Home");
         Optional<Customer> customer  = Optional.of(new Customer(customerDto));
         UserModel details=new UserModel("name","abc@gmail.com","7483247032","password");
         Cart cart1=new Cart(1L,12L,12L,200.0,"TwoStates","JKRowling","http://", "abc",details);
