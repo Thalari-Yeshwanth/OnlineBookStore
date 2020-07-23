@@ -42,4 +42,14 @@ public class UserController {
         }
         return new ResponseEntity<>(new Response(400, "User login unsuccessful"), HttpStatus.NOT_ACCEPTABLE);
     }
+
+    @GetMapping("/verify/{token}")
+    public ResponseEntity<Response> userVerification(@PathVariable("token") String token) throws UserException {
+
+        if (userService.verify(token))
+            return new ResponseEntity<>(new Response(200,"User verified succesfully"), HttpStatus.OK);
+
+        return new ResponseEntity<>(new Response(400,"User verification failed"), HttpStatus.NOT_ACCEPTABLE);
+    }
+
 }

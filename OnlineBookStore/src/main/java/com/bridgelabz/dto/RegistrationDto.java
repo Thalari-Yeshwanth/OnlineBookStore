@@ -5,7 +5,7 @@ import lombok.Data;
 
 import javax.validation.constraints.Pattern;
 
-
+@Data
 @AllArgsConstructor
 public class RegistrationDto {
 
@@ -28,4 +28,5 @@ public class RegistrationDto {
 	public String getPassword() {
 		return this.password;
 	}
+
 }

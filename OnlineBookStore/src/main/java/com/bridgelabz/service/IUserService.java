@@ -9,4 +9,6 @@ public interface IUserService {
     boolean register(RegistrationDto registrationDto)throws UserException;
 
     String login(LoginDto loginDto) throws UserException;
+
+    boolean verify(String token) throws UserException;
 }
