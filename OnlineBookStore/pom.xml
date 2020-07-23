@@ -5,10 +5,9 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.3.2.BUILD-SNAPSHOT</version>
+        <version>2.3.1.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
-    </parent>
-    <groupId>com</groupId>
+    </parent>    <groupId>com</groupId>
     <artifactId>bridgelabz</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>OnlineBookStore</name>
@@ -34,11 +33,6 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
@@ -53,6 +47,18 @@
             <groupId>javax.validation</groupId>
             <artifactId>validation-api</artifactId>
             <version>2.0.1.Final</version>
+        </dependency>
+
+
+
+
+        <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+
+
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.security</groupId>
