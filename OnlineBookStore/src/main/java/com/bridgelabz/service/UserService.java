@@ -41,11 +41,16 @@ public class UserService implements IUserService {
         BeanUtils.copyProperties(registrationDto, userDetails);
         userDetails.setPassword(bCryptPasswordEncoder.encode(userDetails.getPassword()));
         userRepository.save(userDetails);
-        String response = VERIFICATION_URL + JwtGenerator.createJWT(userDetails.getUserId());
-
+        String response= getResponse(userDetails.getUserId());
         if (rabbitMQSender.send(new EmailObject(registrationDto.getEmailId(), "Registration Link...", response)))
             return true;
         return true;
+    }
+
+    private String getResponse(long userId) {
+        String response="\t\t\t\t\t\tThanking you for Registartion with us\n\n"+"Click on the below link for the verification\n\n"
+                +VERIFICATION_URL + JwtGenerator.createJWT(userId);
+        return  response;
     }
 
     @Override

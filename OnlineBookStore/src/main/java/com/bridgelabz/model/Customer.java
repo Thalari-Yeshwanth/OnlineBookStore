@@ -37,14 +37,33 @@ public class Customer {
         this.locationType=customerDto.getLocationType();
     }
 
-    public Customer() {
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
 
+    public String getAddress() {
+        return address;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public String getLandMark() {
+        return landMark;
+    }
+
+    public Customer() {
     }
     public void setUserId(long userId) {
         this.userId=userId;
     }
 
-    public long getPinCode() {
-        return this.pinCode;
-    }
+    public long getPinCode() { return this.pinCode; }
+
+    public String getFullName() {return this.fullName; }
 }
