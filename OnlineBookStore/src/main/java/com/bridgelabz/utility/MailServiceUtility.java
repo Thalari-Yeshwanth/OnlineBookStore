@@ -49,7 +49,7 @@ public class MailServiceUtility {
 			mimeMessage.addHeader("Content-type", "text/HTML; charset=UTF-8");
 			mimeMessage.addHeader("format", "flowed");
 			mimeMessage.addHeader("Content-Transfer-Encoding", "8bit");
-			mimeMessage.setFrom(new InternetAddress(SENDER_EMAIL_ID, "Verification link"));
+			mimeMessage.setFrom(new InternetAddress(SENDER_EMAIL_ID, "OnlineBookStores"));
 			mimeMessage.setReplyTo(InternetAddress.parse(SENDER_EMAIL_ID, false));
 			mimeMessage.setSubject(subject, "UTF-8");
 			mimeMessage.setText(body, "UTF-8");

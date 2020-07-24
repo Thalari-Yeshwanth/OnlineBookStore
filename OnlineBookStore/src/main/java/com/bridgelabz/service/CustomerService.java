@@ -31,7 +31,7 @@ public class CustomerService implements ICustomerService {
     public String addCustomerDetails(String token, CustomerDto customerDto) {
         Long userId= JwtGenerator.decodeJWT(token);
         Optional<UserModel> user = userRepository.findById(userId);
-        Optional<Customer> isCustomerAvailable = customerRepository.findById(user.get().getUserId());
+        Optional<Customer> isCustomerAvailable = customerRepository.findByUserId(user.get().getUserId());
         if(isCustomerAvailable.isPresent()) {
             return "Your details are already saved";
         }

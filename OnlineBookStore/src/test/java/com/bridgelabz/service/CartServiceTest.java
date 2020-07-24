@@ -146,7 +146,8 @@ public class CartServiceTest {
     }
     @Test
     public void givenCartRepository_WhenClickOnDeleteRepository_ShouldReturnResponse() {
-        String response= cartService.deleteAll();
+        String token="abcd";
+        String response= cartService.deleteAll(token);
         Assert.assertEquals(response,"Items Removed Successfully");
     }
 }

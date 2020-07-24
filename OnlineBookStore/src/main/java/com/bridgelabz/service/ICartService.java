@@ -15,7 +15,7 @@ public interface ICartService {
 
     List<Cart> getAllItemFromCart(String token) throws CartException;
 
-    String deleteAll();
+    String deleteAll(String token);
 
     List<Cart> subtractItem(Long bookId, String token);
 

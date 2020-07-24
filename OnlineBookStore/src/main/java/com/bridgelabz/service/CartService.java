@@ -63,8 +63,9 @@ public class CartService implements ICartService {
     }
 
     @Override
-    public String deleteAll() {
-        cartRepository.deleteAll();
+    public String deleteAll(String token) {
+        Long userId = JwtGenerator.decodeJWT(token);
+        cartRepository.deleteByUserId(userId);
         return "Items Removed Successfully";
     }
 

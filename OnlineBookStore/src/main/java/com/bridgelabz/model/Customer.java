@@ -31,7 +31,7 @@ public class Customer {
         this.pinCode=customerDto.getPinCode();
         this.locality=customerDto.getLocality();
         this.address=customerDto.getAddress();
-        this.city=customerDto.getCity();
+        this.state=customerDto.getState();
         this.state=customerDto.getState();
         this.landMark=customerDto.getLandMark();
         this.locationType=customerDto.getLocationType();

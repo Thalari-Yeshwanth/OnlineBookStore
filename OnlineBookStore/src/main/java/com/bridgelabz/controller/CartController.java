@@ -51,8 +51,8 @@ public class CartController {
 
     @ApiOperation(value = "For removing book from the cart")
     @DeleteMapping("/all")
-    public ResponseEntity<Response> removeAllItem()  {
-        String responseMessage = cartService.deleteAll();
+    public ResponseEntity<Response> removeAllItem(@RequestHeader String token)  {
+        String responseMessage = cartService.deleteAll(token);
         return new ResponseEntity<>(new Response(200, responseMessage), HttpStatus.OK);
     }
 

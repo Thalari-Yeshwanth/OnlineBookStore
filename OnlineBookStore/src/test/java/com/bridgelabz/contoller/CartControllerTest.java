@@ -55,8 +55,9 @@ public class CartControllerTest {
     @Test
     public void givenCustomer_WhenClickClearCart_ShouldReturnResponse() {
         String response = "Items Removed Successfully";
-        Mockito.when(cartService.deleteAll()).thenReturn(response);
-        ResponseEntity<Response> responseEntity = cartController.removeAllItem();
+        String token="abcd";
+        Mockito.when(cartService.deleteAll(token)).thenReturn(response);
+        ResponseEntity<Response> responseEntity = cartController.removeAllItem(token);
         Assert.assertEquals(responseEntity.getBody().getMessage(), response);
     }
     @Test
