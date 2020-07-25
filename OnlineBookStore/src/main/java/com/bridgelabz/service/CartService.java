@@ -8,8 +8,10 @@ import com.bridgelabz.model.UserModel;
 import com.bridgelabz.repository.BookStoreRepository;
 import com.bridgelabz.repository.CartRepository;
 import com.bridgelabz.repository.UserRepository;
+import com.bridgelabz.response.Response;
 import com.bridgelabz.utility.JwtGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -27,7 +29,8 @@ public class CartService implements ICartService {
     private CartRepository cartRepository;
 
     @Autowired
-    public BookStoreRepository bookstoreRepository;
+    private BookStoreRepository bookstoreRepository;
+
 
     @Override
     public String addToCart(String token, Long bookId) throws BookException {
@@ -55,11 +58,12 @@ public class CartService implements ICartService {
 
     @Override
     public  List<Cart> getAllItemFromCart(String token) throws CartException {
-        Long userId=JwtGenerator.decodeJWT(token);
-        List<Cart> items = cartRepository.findByUserId(userId);
+        Long id = JwtGenerator.decodeJWT(token);
+        List<Cart> items = cartRepository.findByUserId(id).stream().filter(c -> !c.isInWishList()).collect(Collectors.toList());
         if (items.isEmpty())
-            throw new CartException("cart is empty", CartException.ExceptionType.EMPTY_CART);
+            return new ArrayList<>();
         return items;
+
     }
 
     @Override
@@ -102,4 +106,66 @@ public class CartService implements ICartService {
         }
         return cartRepository.findByUserId(userId);
     }
+
+    @Override
+    public Response addToWishList(Long bookId, String token) throws BookException {
+        long id = JwtGenerator.decodeJWT(token);
+        Cart cartData = cartRepository.findByUserIdAndBookId(id, bookId);
+
+        Long bookid = cartRepository.findduplicatebookId(bookId);
+        if(bookid!=bookId) {
+            if (cartData != null && cartData.isInWishList()) {
+                return new Response(HttpStatus.OK.value(), "Book already present in wishlist");
+            } else if (cartData != null && !cartData.isInWishList()) {
+                return new Response(HttpStatus.OK.value(), "Book already added to Cart");
+            } else {
+                Book book = bookstoreRepository.findById(bookId)
+                        .orElseThrow(() -> new BookException("book does not exist", BookException.ExceptionType.BOOKS_NOT_AVAILABLE));
+                Cart cartModel = new Cart(book);
+                Optional<UserModel> user = userRepository.findById(id);
+                cartModel.setUserDetails(user.get());
+                cartModel.setInWishList(true);
+                cartRepository.save(cartModel);
+                return new Response(HttpStatus.OK.value(), "Book added to WishList");
+            }
+        }
+        throw new BookException("Book already present in wishlist", BookException.ExceptionType.ALREADY_IN_WISHLIST);
+
+    }
+
+
+    @Override
+    public List<Cart> deleteFromWishlist(Long bookId, String token) {
+        Long userId = JwtGenerator.decodeJWT(token);
+        List<Cart> items = cartRepository.findByUserId(userId).stream().filter(Cart::isInWishList).collect(Collectors.toList());
+        List<Cart> selectedItems = items.stream().filter(cartItem -> cartItem.getBookId().equals(bookId))
+                .collect(Collectors.toList());
+        for (Cart book : selectedItems) {
+            cartRepository.delete(book);
+        }
+        return cartRepository.findByUserId(userId);
+    }
+
+    @Override
+    public Response addFromWishlistToCart(Long bookId, String token) {
+        long id = JwtGenerator.decodeJWT(token);
+        Cart cartModel = cartRepository.findByUserIdAndBookId(id, bookId);
+        if(cartModel.isInWishList()){
+            cartModel.setInWishList(false);
+            cartRepository.save(cartModel);
+            return new Response(HttpStatus.OK.value(), "Successfully added book to cart from wishlist");
+        }
+        return new Response(HttpStatus.OK.value(), "Already present in cart, ready to checkout");
+    }
+
+    @Override
+    public List<Cart> getAllItemFromWishList(String token) throws BookException {
+        Long id = JwtGenerator.decodeJWT(token);
+        List<Cart> items = cartRepository.findByUserId(id).stream().filter(Cart::isInWishList).collect(Collectors.toList());
+        if (items.isEmpty())
+            return new ArrayList<>();
+        return items;
+    }
+
+
 }

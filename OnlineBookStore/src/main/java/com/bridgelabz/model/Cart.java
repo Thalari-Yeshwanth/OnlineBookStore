@@ -23,6 +23,8 @@ public class Cart {
 		private String authorName;
 		private String image;
 		private String bookDetails;
+		private boolean isInWishList;
+
 
 		@JsonIgnore
 		@ManyToOne()

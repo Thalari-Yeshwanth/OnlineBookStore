@@ -63,5 +63,30 @@ public class CartController {
         return new ResponseEntity<>(new Response(200,"Book quantity decremented successfully", carts), HttpStatus.OK);
     }
 
+    @ApiOperation(value = "For adding book to wishlist")
+    @PostMapping("/wishlist/book")
+    public Response addToWishList(@RequestParam Long bookId,@RequestHeader("token") String token) throws BookException {
+        return cartService.addToWishList(bookId,token);
+    }
+
+    @ApiOperation(value = "For deleting book from wishlist")
+    @DeleteMapping("/Wishlist/book")
+    public ResponseEntity<Response> deleteFromWishlist(@RequestParam Long bookId,@RequestHeader("token") String token){
+        List<Cart> cart = cartService.deleteFromWishlist(bookId, token);
+        return  new ResponseEntity<>(new Response(200,"Book removed from wishlist",cart),HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "For putting books wishlist to cart")
+    @PutMapping("/wishlist/to/cart")
+    public Response addFromWishlistToCart(@RequestParam Long bookId,@RequestHeader("token") String token){
+        return cartService.addFromWishlistToCart(bookId,token);
+    }
+
+    @ApiOperation(value = "For getting all books from wishlist")
+    @GetMapping("/wishlist/all")
+    public List<Cart> getWishListBooks(@RequestHeader("token") String token) throws BookException {
+        return cartService.getAllItemFromWishList(token);
+    }
+
 }
 

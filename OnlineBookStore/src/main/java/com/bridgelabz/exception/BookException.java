@@ -1,6 +1,8 @@
 package com.bridgelabz.exception;
 
 
+import org.springframework.http.HttpStatus;
+
 public class BookException extends Exception {
 
     private String message;
@@ -11,7 +13,7 @@ public class BookException extends Exception {
     }
 
     public enum ExceptionType {
-        BOOKS_NOT_AVAILABLE
+        BOOKS_NOT_AVAILABLE,ALREADY_IN_WISHLIST
     }
     public ExceptionType type;
 

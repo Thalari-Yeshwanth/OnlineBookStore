@@ -19,4 +19,10 @@ public interface CartRepository extends JpaRepository<Cart,Long> {
     @Transactional
     @Query(value = "delete  FROM cart where user_id=:userId",nativeQuery = true)
     void deleteByUserId(Long userId);
+
+    @Query(value = "select book_id from cart where book_id=?", nativeQuery = true)
+    Long findduplicatebookId(Long bookId);
+
+    @Query(value = "select * from cart where  user_id=:id and book_id=:bookId",nativeQuery = true)
+    Cart findByUserIdAndBookId(long id, Long bookId);
 }
