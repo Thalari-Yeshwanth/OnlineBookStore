@@ -70,7 +70,7 @@ public class CartService implements ICartService {
     public String deleteAll(String token) {
         Long userId = JwtGenerator.decodeJWT(token);
         cartRepository.deleteByUserId(userId);
-        return "Items Removed Successfully";
+        return "Items removed Successfully";
     }
 
     @Override

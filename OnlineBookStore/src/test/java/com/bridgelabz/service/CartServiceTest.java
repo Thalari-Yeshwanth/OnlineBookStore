@@ -15,6 +15,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.mockito.stubbing.OngoingStubbing;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,12 +50,37 @@ public class CartServiceTest {
         List<UserModel> userDetails=new ArrayList<>();
         UserModel details=new UserModel(1234567L,"name","abc@gmail.com","7483247032","password",true,new ArrayList<>());
         userDetails.add(details);
-        Cart cart1=new Cart(1L,12L,12L,200.0,"TwoStates","JKRowling","http://", "abc",details);
+        Cart cart1=new Cart(1L,12L,12L,200.0,"TwoStates","JKRowling","http://", "abc",details,false);
         cart.add(cart1);
         Mockito.when(cartRepository.findByUserId(details.getUserId())).thenReturn(cart);
         String token = JwtGenerator.createJWT(1234567);
-        cartService.getAllItemFromCart(token);
+        List<Cart> allItemFromCart = cartService.getAllItemFromCart(token);
+        Assert.assertEquals(allItemFromCart,cart);
+    }
 
+    @Test
+    public void givenCartRespository_WhenClickOnGetBooksFromWishListShouldReturnCart() throws CartException, BookException {
+        List<Cart> actualcart=new ArrayList<>();
+        List<UserModel> userDetails=new ArrayList<>();
+        UserModel details=new UserModel(1234567L,"name","abc@gmail.com","7483247032","password",true,new ArrayList<>());
+        userDetails.add(details);
+        Cart cart1=new Cart(1l,1L,1,200.0,"HarryPorter","JK rowling","https","abc", details,true);
+        actualcart.add(cart1);
+        Mockito.when(cartRepository.findByUserId(details.getUserId())).thenReturn(actualcart);
+        String token = JwtGenerator.createJWT(1234567);
+        List<Cart> expectedCart = cartService.getAllItemFromWishList(token);
+        Assert.assertEquals(expectedCart,actualcart);
+    }
+    @Test
+    public void givenCartRespository_WhenClickOnGetBooksFromWishListShouldEmptyCart() throws CartException, BookException {
+        List<Cart> actualcart=new ArrayList<>();
+        List<UserModel> userDetails=new ArrayList<>();
+        UserModel details=new UserModel(1234567L,"name","abc@gmail.com","7483247032","password",true,new ArrayList<>());
+        userDetails.add(details);
+        Mockito.when(cartRepository.findByUserId(details.getUserId())).thenReturn(actualcart);
+        String token = JwtGenerator.createJWT(1234567);
+        List<Cart> expectedCart = cartService.getAllItemFromWishList(token);
+        Assert.assertEquals(expectedCart,actualcart);
     }
     @Test
     public void givenCartRespository_WhenClickOnGetAllItemsShouldThrowException() {
@@ -89,12 +115,14 @@ public class CartServiceTest {
     @Test
     public void givenCartRepository_WhenAddMoreQuantity_ShouldReturnUpdatedCart() {
         Long bookId=1L;
-        String token = JwtGenerator.createJWT(1234567);
+        String token = JwtGenerator.createJWT(1234567l);
         Book book=new Book("1",1L,"JK Rowling","Two States","Two States", 1, 200.0,"abc");
         Cart cart=new Cart(book);
         List<Cart> cartList=new ArrayList<>();
         cartList.add(cart);
         when(cartRepository.findByUserId(1234567L)).thenReturn(cartList);
+        Optional<Book>  book1 = Optional.of(new Book("1",1,"Chetan Bhagat","The Girl in Room 105'","http://books.google.com/books/content?id=GHt_uwEACAAJ&printsec=frontcover&img=1&zoom=5'",12,100.0,"xyz"));
+        when(bookStoreRepository.findById(bookId)).thenReturn(book1);
         List<Cart> cartList1 = cartService.addMoreItems(bookId, token);
         long quantity = cartList1.get(0).getQuantity();
         Assert.assertEquals(book.getQuantity()+1,quantity);
@@ -144,10 +172,12 @@ public class CartServiceTest {
         Assert.assertEquals(cartList1.size(),1);
 
     }
+
     @Test
     public void givenCartRepository_WhenClickOnDeleteRepository_ShouldReturnResponse() {
-        String token="abcd";
+        String token = JwtGenerator.createJWT(121);
+    //     Mockito.when(cartRepository.deleteByUserId(121L)).thenReturn("Items removed Successfully");
         String response= cartService.deleteAll(token);
-        Assert.assertEquals(response,"Items Removed Successfully");
+        Assert.assertEquals(response,"Items removed Successfully");
     }
 }

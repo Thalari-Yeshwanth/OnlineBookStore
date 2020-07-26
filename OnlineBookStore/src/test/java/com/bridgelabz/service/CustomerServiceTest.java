@@ -58,6 +58,6 @@ public class CustomerServiceTest {
         Optional<Customer> customer= Optional.of(new Customer(customerDto));
         Mockito.when(customerRepository.findById(1234567L)).thenReturn(customer);
         Customer customerDetails = customerService.getCustomerDetails(token);
-        Assert.assertEquals(customerDetails.getPinCode(), "515001");
+        Assert.assertEquals(customerDetails.getPinCode(), 515001);
     }
 }

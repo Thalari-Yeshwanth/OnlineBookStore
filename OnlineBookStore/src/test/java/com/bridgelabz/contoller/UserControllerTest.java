@@ -8,6 +8,7 @@ import com.bridgelabz.exception.UserException;
 import com.bridgelabz.model.UserModel;
 import com.bridgelabz.response.Response;
 import com.bridgelabz.service.UserService;
+import com.bridgelabz.utility.JwtGenerator;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
@@ -90,5 +91,20 @@ public class UserControllerTest {
             Assert.assertEquals(UserException.ExceptionType.INVALID_USER,e.type);
         }
     }
+    @Test
+    public void givenUserUponRegistration_WhenClickOnVerifyMail_ShouldReturnResponse() throws UserException {
+        String token = JwtGenerator.createJWT(12L);
+        when(userService.verify(token)).thenReturn(true);
+        ResponseEntity<Response> responseResponseEntity = userController.userVerification(token);
+        Assert.assertEquals(responseResponseEntity.getBody().getMessage(),"User verified successfully");
+    }
+    @Test
+    public void givenUserUponRegistration_WhenClickOnVerifyMail_ShouldFalse() throws UserException {
+        String token = JwtGenerator.createJWT(12L);
+        when(userService.verify(token)).thenReturn(false);
+        ResponseEntity<Response> responseResponseEntity = userController.userVerification(token);
+        Assert.assertEquals(responseResponseEntity.getBody().getMessage(),"User verification failed");
+    }
+
 
 }

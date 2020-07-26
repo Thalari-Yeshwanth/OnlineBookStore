@@ -43,7 +43,7 @@ public class Cart {
 		this.bookDetails=this.getBookDetails();
 	}
 
-	public Cart(long id, long bookId, long quantity, double price, String bookName, String authorName, String image, String bookDetails,  UserModel userDetails) {
+	public Cart(long id, long bookId, long quantity, double price, String bookName, String authorName, String image, String bookDetails,  UserModel userDetails, Boolean isInWishList) {
 
 		this.id = id;
 		this.bookId = bookId;
@@ -54,5 +54,6 @@ public class Cart {
 		this.image = image;
 		this.bookDetails = bookDetails;
 		this.userDetails = userDetails;
+		this.isInWishList=isInWishList;
 	}
 }

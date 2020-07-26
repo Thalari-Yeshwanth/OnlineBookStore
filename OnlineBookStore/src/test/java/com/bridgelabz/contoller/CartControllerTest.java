@@ -20,6 +20,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
@@ -51,6 +52,40 @@ public class CartControllerTest {
         ResponseEntity<Response> responseEntity = cartController.addToCart(bookId, token);
         Assert.assertEquals(responseEntity.getBody().getMessage(), response);
     }
+    @Test
+    public void givenCustomer_WhenClickOnAddToWishList_ShouldReturnResponse() throws BookException, UserException {
+        Response response = new Response(HttpStatus.OK.value(), "Book added to WishList");
+        String token = "abcd";
+        Long bookId = 1L;
+        Mockito.when(cartService.addToWishList(bookId, token)).thenReturn(response);
+        Response response1 = cartController.addToWishList(bookId, token);
+        Assert.assertEquals(response1, response);
+    }
+
+    @Test
+    public void givenCustomer_WhenClickRemoveItemFromWishList_ShouldReturnWishListList() throws BookException {
+        String token="abcd";Long bookId=1L;
+        List<Cart> cartList=new ArrayList<>();
+        Book book=new Book("1",1L,"JK Rowling","Two States","Two States", 1, 200.0,"abc");
+        Cart cart=new Cart(book);
+        cartList.add(cart);
+        List<Cart> selectedItems = new ArrayList<>();
+        Mockito.when(cartService.deleteFromWishlist(bookId,token)).thenReturn(selectedItems);
+        ResponseEntity<Response> responseEntity = cartController.deleteFromWishlist(bookId, token);
+        Assert.assertEquals(responseEntity.getBody().getData(), selectedItems);
+    }
+
+    @Test
+    public void givenCustomer_WhenClickOnMoveBookToCart_ShouldReturnResponse() {
+        String token="abcd";Long bookId=1L;
+        Response expectedResponse = new Response(HttpStatus.OK.value(), "Successfully added book to cart from wishlist");
+        when(cartService.addFromWishlistToCart(bookId, token)).thenReturn(expectedResponse);
+        Response actualResponse = cartController.addFromWishlistToCart(bookId, token);
+        Assert.assertEquals(expectedResponse,actualResponse);
+
+    }
+
+
 
     @Test
     public void givenCustomer_WhenClickClearCart_ShouldReturnResponse() {
@@ -60,6 +95,8 @@ public class CartControllerTest {
         ResponseEntity<Response> responseEntity = cartController.removeAllItem(token);
         Assert.assertEquals(responseEntity.getBody().getMessage(), response);
     }
+
+
     @Test
     public void givenCustomer_WhenClickRemoveItem_ShouldReturnCartList() throws BookException {
         String token="abcd";Long bookId=1L;
@@ -85,6 +122,19 @@ public class CartControllerTest {
         ResponseEntity<Response> responseEntity = cartController.getAllItemsFromCart(token);
         Assert.assertEquals(responseEntity.getBody().getData(), cartList);
     }
+
+    @Test
+    public void givenCustomer_WhenClickCnMyWishList_ShouldReturnWishList() throws CartException, BookException {
+        String token="abcd";
+        List<Cart> cartList=new ArrayList<>();
+        Book book=new Book("1",1L,"JK Rowling","Two States","Two States", 1, 200.0,"abc");
+        Cart cart=new Cart(book);
+        cartList.add(cart);
+        Mockito.when(cartService.getAllItemFromWishList(token)).thenReturn(cartList);
+        List<Cart> wishListBooks = cartController.getWishListBooks(token);
+        Assert.assertEquals(wishListBooks, cartList);
+    }
+
     @Test
     public void givenCustomer_WhenClickOnAddQuantity_ShouldReturnUpdatedCartList() throws  BookException {
         String token="abcd";Long bookId=1L;

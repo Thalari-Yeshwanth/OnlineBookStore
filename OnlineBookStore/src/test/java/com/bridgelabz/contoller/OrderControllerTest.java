@@ -53,7 +53,7 @@ public class OrderControllerTest {
         List<UserModel> userDetails=new ArrayList<>();
         UserModel details=new UserModel("name","abc@gmail.com","7483247032","password");
         userDetails.add(details);
-        Cart cart1=new Cart(1L,12L,12L,200.0,"TwoStates","JKRowling","http://", "abc",details);
+        Cart cart1=new Cart(1L,12L,12L,200.0,"TwoStates","JKRowling","http://", "abc",details,false);
         cart.add(cart1);
         double totalPrice= cart.stream().mapToDouble(book -> book.getPrice() * book.getQuantity()).sum();
         Customer customer=new Customer();

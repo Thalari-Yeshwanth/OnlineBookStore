@@ -1,11 +1,10 @@
 package com.bridgelabz.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
 
 import javax.validation.constraints.Pattern;
 
-@Data
+
 @AllArgsConstructor
 public class RegistrationDto {
 
@@ -24,9 +23,7 @@ public class RegistrationDto {
 	public String getEmailId() {
 		return this.emailId;
 	}
-
 	public String getPassword() {
 		return this.password;
 	}
-
 }
