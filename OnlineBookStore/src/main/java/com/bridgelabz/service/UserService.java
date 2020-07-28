@@ -1,15 +1,19 @@
 package com.bridgelabz.service;
 
+import com.bridgelabz.dto.ForgotPasswordDto;
 import com.bridgelabz.dto.LoginDto;
 import com.bridgelabz.dto.RegistrationDto;
+import com.bridgelabz.dto.ResetPasswordDto;
 import com.bridgelabz.exception.UserException;
 import com.bridgelabz.model.UserModel;
 import com.bridgelabz.repository.UserRepository;
 import com.bridgelabz.response.EmailObject;
+import com.bridgelabz.response.Response;
 import com.bridgelabz.utility.JwtGenerator;
 import com.bridgelabz.utility.RabbitMQSender;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +33,7 @@ public class UserService implements IUserService {
 
 
     private static final String VERIFICATION_URL = "http://localhost:8080/user/verify/";
+    private static final String RESETPASSWORD_URL = "http://localhost:8080/user/resetpassword?token=";
 
 
     @Override
@@ -78,6 +83,33 @@ public class UserService implements IUserService {
                 return true;
             }
             throw new UserException("User already verified", UserException.ExceptionType.ALREADY_VERFIED);
+        }
+        return false;
+    }
+    @Override
+    public Response forgetPassword(ForgotPasswordDto userMail) {
+        UserModel isIdAvailable = userRepository.findByEmail(userMail.getEmailId()).get();
+        if (isIdAvailable != null && isIdAvailable.isVerify()) {
+            String token = JwtGenerator.createJWT(isIdAvailable.getUserId());
+            String response = RESETPASSWORD_URL + token;
+            if (rabbitMQSender.send(new EmailObject(isIdAvailable.getEmailId(), "ResetPassword Link...", response)))
+                return new Response(HttpStatus.OK.value(), "ResetPassword link Successfully", token);
+        }
+        return new Response(HttpStatus.OK.value(), "Email sending failed");
+    }
+
+    @Override
+    public boolean resetPassword(ResetPasswordDto resetPassword, String token) throws UserException {
+        if (resetPassword.getNewPassword().equals(resetPassword.getConfirmPassword())) {
+            long id = JwtGenerator.decodeJWT(token);
+            System.out.println(id+" id");
+            UserModel isIdAvailable = userRepository.findById(id).get();
+            if (isIdAvailable != null) {
+                isIdAvailable.setPassword(bCryptPasswordEncoder.encode((resetPassword.getNewPassword())));
+                userRepository.save(isIdAvailable);
+                return true;
+            }
+            throw new UserException("User not exist", UserException.ExceptionType.INVALID_USER);
         }
         return false;
     }
