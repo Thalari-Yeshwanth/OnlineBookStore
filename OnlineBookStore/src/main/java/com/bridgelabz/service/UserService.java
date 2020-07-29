@@ -102,7 +102,6 @@ public class UserService implements IUserService {
     public boolean resetPassword(ResetPasswordDto resetPassword, String token) throws UserException {
         if (resetPassword.getNewPassword().equals(resetPassword.getConfirmPassword())) {
             long id = JwtGenerator.decodeJWT(token);
-            System.out.println(id+" id");
             UserModel isIdAvailable = userRepository.findById(id).get();
             if (isIdAvailable != null) {
                 isIdAvailable.setPassword(bCryptPasswordEncoder.encode((resetPassword.getNewPassword())));

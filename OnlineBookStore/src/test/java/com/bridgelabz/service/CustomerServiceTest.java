@@ -46,6 +46,9 @@ public class CustomerServiceTest {
         Optional<UserModel> userDetails = Optional.of(new UserModel("Thalari Yeshwanth", "yeshwanththalari0123@gmaiil.com", "9666924586", "154G5a0124"));
         Mockito.when(userRepository.findById(userId)).thenReturn(userDetails);
         Mockito.when(customerRepository.findById(userId)).thenReturn(customer);
+        customer.get().getFullName();customer.get().getPinCode();customer.get().getAddress();
+        customer.get().getCity();customer.get().getLandMark();customer.get().getPhoneNumber();
+        customer.get().getState();
         String response = customerService.addCustomerDetails(token, customerDto);
         Assert.assertEquals("Customer details added successfully",response);
     }

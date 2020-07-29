@@ -57,7 +57,7 @@ public class CartService implements ICartService {
     }
 
     @Override
-    public  List<Cart> getAllItemFromCart(String token) throws CartException {
+    public  List<Cart> getAllItemFromCart(String token) {
         Long id = JwtGenerator.decodeJWT(token);
         List<Cart> items = cartRepository.findByUserId(id).stream().filter(c -> !c.isInWishList()).collect(Collectors.toList());
         if (items.isEmpty())
@@ -111,7 +111,6 @@ public class CartService implements ICartService {
     public Response addToWishList(Long bookId, String token) throws BookException {
         long id = JwtGenerator.decodeJWT(token);
         Cart cartData = cartRepository.findByUserIdAndBookId(id, bookId);
-
         Long bookid = cartRepository.findduplicatebookId(bookId);
         if(bookid!=bookId) {
             if (cartData != null && cartData.isInWishList()) {
@@ -145,7 +144,6 @@ public class CartService implements ICartService {
         }
         return cartRepository.findByUserId(userId);
     }
-
     @Override
     public Response addFromWishlistToCart(Long bookId, String token) {
         long id = JwtGenerator.decodeJWT(token);
@@ -166,6 +164,4 @@ public class CartService implements ICartService {
             return new ArrayList<>();
         return items;
     }
-
-
 }

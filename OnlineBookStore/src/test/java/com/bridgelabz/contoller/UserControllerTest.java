@@ -1,8 +1,10 @@
 package com.bridgelabz.contoller;
 
 import com.bridgelabz.controller.UserController;
+import com.bridgelabz.dto.ForgotPasswordDto;
 import com.bridgelabz.dto.LoginDto;
 import com.bridgelabz.dto.RegistrationDto;
+import com.bridgelabz.dto.ResetPasswordDto;
 import com.bridgelabz.exception.BookException;
 import com.bridgelabz.exception.UserException;
 import com.bridgelabz.model.UserModel;
@@ -20,6 +22,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import static org.mockito.Mockito.mock;
@@ -105,6 +108,37 @@ public class UserControllerTest {
         ResponseEntity<Response> responseResponseEntity = userController.userVerification(token);
         Assert.assertEquals(responseResponseEntity.getBody().getMessage(),"User verification failed");
     }
+    @Test
+    public  void givenUser_whenForgotPasswordClickOnForgotPassword_ShouldReturnResponse() {
+        ForgotPasswordDto forgotPasswordDto = new ForgotPasswordDto();
+        forgotPasswordDto.setEmailId("yeshwanththalari.pk@gmail.com");
+        String token="abcd";
+        Response response = new Response(HttpStatus.OK.value(), "ResetPassword link Successfully", token);
+        Mockito.when(userService.forgetPassword(forgotPasswordDto)).thenReturn(response);
+        ResponseEntity<Response> responseEntity = userController.forgotPassword(forgotPasswordDto);
+        Assert.assertEquals(responseEntity.getBody(),response);
+    }
 
+    @Test
+    public void givenUser_WhenTriesToResetPassword_shouldReturnResponse() throws UserException {
+        ResetPasswordDto resetPasswordDto = new ResetPasswordDto();
+        resetPasswordDto.setConfirmPassword("134G5a0123@");
+        resetPasswordDto.setNewPassword("134G5a0123@");
+        String token="abcd";
+        Mockito.when(userService.resetPassword(resetPasswordDto,token)).thenReturn(true);
+        ResponseEntity<Response> responseEntity = userController.resetPassword(resetPasswordDto, token);
+        Assert.assertEquals(responseEntity.getBody().getMessage(),"User password reset successful");
+    }
+
+    @Test
+    public void givenUserNotRegistered_WhenTriesToResetPassword_shouldReturnResponse() throws UserException {
+        ResetPasswordDto resetPasswordDto = new ResetPasswordDto();
+        resetPasswordDto.setConfirmPassword("134G5a0123@");
+        resetPasswordDto.setNewPassword("134G5a0123@");
+        String token="abcd";
+        Mockito.when(userService.resetPassword(resetPasswordDto,token)).thenReturn(false);
+        ResponseEntity<Response> responseEntity = userController.resetPassword(resetPasswordDto, token);
+        Assert.assertEquals(responseEntity.getBody().getMessage(),"User password reset successful");
+    }
 
 }

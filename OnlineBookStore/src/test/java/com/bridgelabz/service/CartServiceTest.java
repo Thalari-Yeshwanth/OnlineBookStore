@@ -7,6 +7,7 @@ import com.bridgelabz.model.UserModel;
 import com.bridgelabz.repository.BookStoreRepository;
 import com.bridgelabz.repository.CartRepository;
 import com.bridgelabz.repository.UserRepository;
+import com.bridgelabz.response.Response;
 import com.bridgelabz.utility.JwtGenerator;
 import org.junit.Assert;
 import org.junit.Before;
@@ -20,6 +21,7 @@ import org.mockito.stubbing.OngoingStubbing;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -77,6 +79,7 @@ public class CartServiceTest {
         List<UserModel> userDetails=new ArrayList<>();
         UserModel details=new UserModel(1234567L,"name","abc@gmail.com","7483247032","password",true,new ArrayList<>());
         userDetails.add(details);
+        new Cart();
         Mockito.when(cartRepository.findByUserId(details.getUserId())).thenReturn(actualcart);
         String token = JwtGenerator.createJWT(1234567);
         List<Cart> expectedCart = cartService.getAllItemFromWishList(token);
@@ -90,15 +93,8 @@ public class CartServiceTest {
         userDetails.add(details);
         Mockito.when(cartRepository.findByUserId(details.getUserId())).thenReturn(cart);
         String token = JwtGenerator.createJWT(1234567);
-        try {
-            cartService.getAllItemFromCart(token);
-        } catch (CartException e) {
-            Assert.assertEquals(e.type, CartException.ExceptionType.EMPTY_CART);
-        }
-
+        cartService.getAllItemFromCart(token);
     }
-
-
 
     @Test
     public void givenCartRepository_WhenAddtoCart_ShouldReturnResponse() throws BookException {
@@ -179,5 +175,57 @@ public class CartServiceTest {
     //     Mockito.when(cartRepository.deleteByUserId(121L)).thenReturn("Items removed Successfully");
         String response= cartService.deleteAll(token);
         Assert.assertEquals(response,"Items removed Successfully");
+    }
+    @Test
+    public void givenWishlistRepository_WhenClickOnGetAllItemsShouldReturnCart() throws BookException {
+        List<Cart> cartList=new ArrayList<>();
+        String token = JwtGenerator.createJWT(1234567L);
+        Long userId = JwtGenerator.decodeJWT(token);
+        Book book=new Book("1",1L,"JK Rowling","Two States","Two States", 2, 200.0,"abc");
+        Cart cart=new Cart(book);
+        cartList.add(cart);
+        Mockito.when(cartRepository.findByUserId(userId).stream().filter(Cart::isInWishList).collect(Collectors.toList())).thenReturn(cartList);
+        List<Cart> allItemFromWishList = cartService.getAllItemFromWishList(token);
+//        Assert.assertEquals(cartList,allItemFromWishList);
+    }
+
+    @Test
+    public void deleteFromWishlist() {
+        String token = JwtGenerator.createJWT(1234567L);
+        Long userId = JwtGenerator.decodeJWT(token);
+        List<Cart> cartList=new ArrayList<>();
+        Book book=new Book("1",1L,"JK Rowling","Two States","Two States", 2, 200.0,"abc");
+        Cart cart=new Cart(book);
+        cartList.add(cart);
+        Mockito.when(cartRepository.findByUserId(userId).stream().filter(Cart::isInWishList).collect(Collectors.toList())).thenReturn(cartList);
+        List<Cart> carts = cartService.deleteFromWishlist(1L, token);
+        Assert.assertEquals(carts,cartList);
+    }
+
+    @Test
+    public void addFromWishListToCart() {
+        String token = JwtGenerator.createJWT(1234567L);
+        long id = JwtGenerator.decodeJWT(token);
+        Book book=new Book("1",3L,"JK Rowling","Two States","Two States", 2, 200.0,"abc");
+        Cart cart=new Cart(book);
+        Mockito.when(cartRepository.findByUserIdAndBookId(id,3L)).thenReturn(cart);
+        Response response = cartService.addFromWishlistToCart(3L, token);
+        Assert.assertEquals(response.getStatus(),200);
+    }
+
+    @Test
+    public void addTOWishList() throws BookException {
+        String token = JwtGenerator.createJWT(1234567L);
+        long id = JwtGenerator.decodeJWT(token);
+        Book book=new Book("1",3L,"JK Rowling","Two States","Two States", 2, 200.0,"abc");
+        Cart cart=new Cart(11,3L,2,200.0,"Harry Porter","Jk Rowling","http:/","abc",new UserModel(),false);
+        List<Book> bookList=new ArrayList<>();
+        Optional<UserModel> userDetails = Optional.of(new UserModel(1234567L,"ThalariYeshwanth","yeshwanththalri1998@gmail.com","9666924586","154G5a0123@",true,bookList));
+        Mockito.when(cartRepository.findByUserIdAndBookId(id,3L)).thenReturn(cart);
+        Mockito.when(cartRepository.findduplicatebookId(3L)).thenReturn(1L);
+        Mockito.when(bookStoreRepository.findById(3L)).thenReturn(Optional.of(book));
+        Mockito.when(userRepository.findById(id)).thenReturn(userDetails);
+        Response response = cartService.addToWishList(3L, token);
+       Assert.assertEquals(response.getMessage(),"Book added to WishList");
     }
 }

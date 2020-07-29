@@ -57,6 +57,7 @@ public class BookServiceTest {
         Book books2 = new Book("1",(long)2,"Jk Rowling","Harry Porter","http://books.google.com/books/content?id=GHt_uwEACAAJ&printsec=frontcover&img=1&zoom=5'",5,200.0,"abc");
         booksList.add(books1);
         booksList.add(books2);
+        new Book();
         when(mockedBookShopRepository.findAll()).thenReturn(booksList);
         List<Book> allBooks = bookStoreServices.getAllBooks();
         int size = booksList.size();

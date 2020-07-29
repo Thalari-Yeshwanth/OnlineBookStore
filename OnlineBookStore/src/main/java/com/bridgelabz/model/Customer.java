@@ -37,6 +37,8 @@ public class Customer {
         this.locationType=customerDto.getLocationType();
     }
 
+    public String getFullName() {return this.fullName; }
+
     public String getPhoneNumber() {
         return phoneNumber;
     }
@@ -64,6 +66,4 @@ public class Customer {
     }
 
     public long getPinCode() { return this.pinCode; }
-
-    public String getFullName() {return this.fullName; }
 }

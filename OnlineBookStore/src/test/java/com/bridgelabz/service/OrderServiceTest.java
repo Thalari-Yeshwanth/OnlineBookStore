@@ -76,6 +76,7 @@ public class OrderServiceTest {
         UserModel details=new UserModel("name","abc@gmail.com","7483247032","password");
         Cart cart1=new Cart(1L,12L,12L,200.0,"TwoStates","JKRowling","http://", "abc",details,false);
         cart.add(cart1);
+        new Order();
         Mockito.when(cartRepository.findByUserId(123456l)).thenReturn(cart);
         Mockito.when(customerRepository.findById(123456l)).thenReturn(customer);
         double totalPrice= cart.stream().mapToDouble(book -> book.getPrice() * book.getQuantity()).sum();
