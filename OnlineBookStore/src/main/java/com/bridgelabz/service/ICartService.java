@@ -12,11 +12,11 @@ public interface ICartService {
 
     String addToCart(String token, Long bookId) throws UserException, BookException;
 
-    List<Cart> removeItem(Long bookId, String token) throws BookException;
+    List<Cart> removeItem(Long bookId, String token) throws BookException, CartException;
 
     List<Cart> getAllItemFromCart(String token) throws CartException;
 
-    String deleteAll(String token);
+    String deleteAll(String token)throws CartException;;
 
     List<Cart> subtractItem(Long bookId, String token);
 

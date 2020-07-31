@@ -64,6 +64,22 @@ public class BookServiceTest {
         Assert.assertEquals(allBooks.size(), size);
     }
 
+    @Test
+    public void givenBookStore_WhenLoginNotSuccessful_ShouldReturnException() {
+        booksList = new ArrayList<>();
+        new Book();
+        when(mockedBookShopRepository.findAll()).thenReturn(booksList);
+        List<Book> allBooks = null;
+        try {
+            allBooks = bookStoreServices.getAllBooks();
+            int size = booksList.size();
+            Assert.assertEquals(allBooks.size(), size);
+        } catch (BookException e) {
+            System.out.println("books not displayed");
+            e.printStackTrace();
+        }
+    }
+
 
     @Test
     public void givenBookStore_WhenClickSortByLowPriceOnHomePage_ShouldReturnRecordsBasedOnLowestPrice() throws BookException {

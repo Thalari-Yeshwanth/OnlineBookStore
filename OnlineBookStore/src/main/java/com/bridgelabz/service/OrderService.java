@@ -42,11 +42,13 @@ public class OrderService implements IOrderService {
         double totalPrice= cart.stream().mapToDouble(book -> book.getPrice() * book.getQuantity()).sum();
         Optional<Customer> customer = customerRepository.findByUserId(userId);
         Order order=new Order(orderId, userId, cart, totalPrice, customer.get());
-        orderRepository.save(order);
+        Order save = orderRepository.save(order);
+        System.out.println(save);
         String orderMail = mailData.getOrderMail(orderId, customer.get(), totalPrice, cart);
         rabbitMQSender.send(new EmailObject(user.get().getEmailId(), "Order Summary", orderMail));
         return orderId;
     }
+
     @Override
     public  Order getOrderSummary(String token)  {
         Long userId= JwtGenerator.decodeJWT(token);

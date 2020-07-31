@@ -51,6 +51,8 @@ public class CartControllerTest {
         Mockito.when(cartService.addToCart(token, bookId)).thenReturn(response);
         ResponseEntity<Response> responseEntity = cartController.addToCart(bookId, token);
         Assert.assertEquals(responseEntity.getBody().getMessage(), response);
+
+
     }
     @Test
     public void givenCustomer_WhenClickOnAddToWishList_ShouldReturnResponse() throws BookException, UserException {
@@ -92,13 +94,18 @@ public class CartControllerTest {
         String response = "Items Removed Successfully";
         String token="abcd";
         Mockito.when(cartService.deleteAll(token)).thenReturn(response);
-        ResponseEntity<Response> responseEntity = cartController.removeAllItem(token);
-        Assert.assertEquals(responseEntity.getBody().getMessage(), response);
+        ResponseEntity<Response> responseEntity = null;
+        try {
+            responseEntity = cartController.removeAllItem(token);
+            Assert.assertEquals(responseEntity.getBody().getMessage(), response);
+        } catch (CartException e) {
+            e.printStackTrace();
+        }
     }
 
 
     @Test
-    public void givenCustomer_WhenClickRemoveItem_ShouldReturnCartList() throws BookException {
+    public void givenCustomer_WhenClickRemoveItem_ShouldReturnCartList() throws BookException, CartException {
         String token="abcd";Long bookId=1L;
         List<Cart> cartList=new ArrayList<>();
         Book book=new Book("1",1L,"JK Rowling","Two States","Two States", 1, 200.0,"abc");
@@ -180,4 +187,8 @@ public class CartControllerTest {
         }
     }
 
+    @Test
+    public void whenBookIsAddedToCart_ThrowException() {
+
+    }
 }

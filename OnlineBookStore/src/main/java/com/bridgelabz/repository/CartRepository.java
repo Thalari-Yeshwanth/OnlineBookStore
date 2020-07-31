@@ -21,7 +21,7 @@ public interface CartRepository extends JpaRepository<Cart,Long> {
     void deleteByUserId(Long userId);
 
     @Query(value = "select book_id from cart where book_id=?", nativeQuery = true)
-    Long findduplicatebookId(Long bookId);
+    Long findDuplicateBookId(Long bookId);
 
     @Query(value = "select * from cart where  user_id=:id and book_id=:bookId",nativeQuery = true)
     Cart findByUserIdAndBookId(long id, Long bookId);

@@ -27,11 +27,12 @@ public class CartController {
     public ResponseEntity<Response> addToCart(@RequestParam Long bookId, @RequestHeader String token) throws UserException, BookException {
         String responseMessage = cartService.addToCart(token, bookId);
         return new ResponseEntity<>(new Response(200,responseMessage), HttpStatus.OK);
+
     }
 
     @ApiOperation(value = "For removing entire Cart")
     @DeleteMapping("/book")
-    public ResponseEntity<Response> removeFromCart(@RequestParam Long bookId, @RequestHeader String token) throws BookException {
+    public ResponseEntity<Response> removeFromCart(@RequestParam Long bookId, @RequestHeader String token) throws BookException, CartException {
         List<Cart> userCart = cartService.removeItem(bookId,token);
         return new ResponseEntity<>(new Response(200,"Successfully removed book from cart", userCart), HttpStatus.OK);
     }
@@ -45,13 +46,13 @@ public class CartController {
     @ApiOperation(value = "For getting all books in the cart")
     @GetMapping("/allbooks")
     public ResponseEntity<Response> getAllItemsFromCart (@RequestHeader String token) throws CartException {
-        List<Cart> userCart = cartService.getAllItemFromCart(token);
-        return new ResponseEntity<>(new Response(200, "Successfully returned books from cart", userCart), HttpStatus.OK);
-    }
+            List<Cart>   userCart = cartService.getAllItemFromCart(token);
+            return new ResponseEntity<>(new Response(200, "Successfully returned books from cart", userCart), HttpStatus.OK);
+        }
 
     @ApiOperation(value = "For removing book from the cart")
     @DeleteMapping("/all")
-    public ResponseEntity<Response> removeAllItem(@RequestHeader String token)  {
+    public ResponseEntity<Response> removeAllItem(@RequestHeader String token) throws CartException {
         String responseMessage = cartService.deleteAll(token);
         return new ResponseEntity<>(new Response(200, responseMessage), HttpStatus.OK);
     }

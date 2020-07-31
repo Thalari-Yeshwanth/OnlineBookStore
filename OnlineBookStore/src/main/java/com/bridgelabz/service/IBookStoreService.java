@@ -6,6 +6,7 @@ import com.bridgelabz.model.Book;
 import java.util.List;
 
 public interface IBookStoreService {
+
     List<Book> getAllBooks() throws BookException;
 
     List<Book> sortBooksByPriceFromLowToHigh() throws BookException;

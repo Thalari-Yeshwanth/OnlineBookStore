@@ -45,9 +45,12 @@ public class CartService implements ICartService {
     }
 
     @Override
-    public List<Cart> removeItem(Long bookId, String token) {
+    public List<Cart> removeItem(Long bookId, String token) throws CartException {
         Long userId=JwtGenerator.decodeJWT(token);
         List<Cart> items = cartRepository.findByUserId(userId);
+        if(items.isEmpty()){
+            throw new CartException("book is not removed", CartException.ExceptionType.EMPTY_CART);
+        }
         List<Cart> selectedItems = items.stream().filter(cartItem -> cartItem.getBookId().equals(bookId))
                 .collect(Collectors.toList());
         for (Cart book:selectedItems) {
@@ -80,7 +83,7 @@ public class CartService implements ICartService {
         List<Cart> selectedItems = items.stream().filter(cartItem -> cartItem.getBookId().equals(bookId))
                 .collect(Collectors.toList());
         Optional<Book> book1 = bookstoreRepository.findById(bookId);
-        if(book1.get().getQuantity()<selectedItems.get(0).getQuantity()){
+        if(book1.get().getQuantity()<=selectedItems.get(0).getQuantity()){
             return cartRepository.findByUserId(userId);
         }
         for (Cart book:selectedItems) {
@@ -111,8 +114,8 @@ public class CartService implements ICartService {
     public Response addToWishList(Long bookId, String token) throws BookException {
         long id = JwtGenerator.decodeJWT(token);
         Cart cartData = cartRepository.findByUserIdAndBookId(id, bookId);
-        Long bookid = cartRepository.findduplicatebookId(bookId);
-        if(bookid!=bookId) {
+        Long cartBook = cartRepository.findDuplicateBookId(bookId);
+        if(cartBook!=bookId) {
             if (cartData != null && cartData.isInWishList()) {
                 return new Response(HttpStatus.OK.value(), "Book already present in wishlist");
             } else if (cartData != null && !cartData.isInWishList()) {
@@ -164,4 +167,6 @@ public class CartService implements ICartService {
             return new ArrayList<>();
         return items;
     }
+
+
 }

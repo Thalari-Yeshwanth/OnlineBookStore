@@ -1,8 +1,6 @@
 package com.bridgelabz.exception;
 
 
-import org.springframework.http.HttpStatus;
-
 public class BookException extends Exception {
 
     private String message;

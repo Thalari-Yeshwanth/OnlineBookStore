@@ -36,6 +36,4 @@ public class BookStoreService implements IBookStoreService{
         return booksList.stream().sorted((firstBook,secondBook)-> (int) (firstBook.price-secondBook.price))
                 .collect(Collectors.toList());
     }
-
-
 }

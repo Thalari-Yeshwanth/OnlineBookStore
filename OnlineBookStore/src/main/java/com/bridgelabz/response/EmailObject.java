@@ -6,9 +6,7 @@ import lombok.Setter;
 
 import java.io.Serializable;
 
-@Getter
-@Setter
-@NoArgsConstructor
+
 public class EmailObject implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -20,5 +18,17 @@ public class EmailObject implements Serializable {
 		this.email = email;
 		this.subject = subject;
 		this.message = message;
+	}
+
+	public String getEmail() {
+		return this.email;
+	}
+
+	public String getSubject() {
+		return this.subject;
+	}
+
+	public String getMessage() {
+		return this.message;
 	}
 }

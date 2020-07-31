@@ -58,8 +58,7 @@ public class UserController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
     @PostMapping("/reset/password")
-    public ResponseEntity<Response> resetPassword(@RequestBody @Valid ResetPasswordDto resetPassword,
-                                                  @RequestHeader String token) throws UserException {
+    public ResponseEntity<Response> resetPassword(@RequestBody @Valid ResetPasswordDto resetPassword, @RequestHeader String token) throws UserException {
         
         if (userService.resetPassword(resetPassword, token))
             return new ResponseEntity<>(new Response(200,"User password reset successful"), HttpStatus.OK);

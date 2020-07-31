@@ -138,7 +138,7 @@ public class UserControllerTest {
         String token="abcd";
         Mockito.when(userService.resetPassword(resetPasswordDto,token)).thenReturn(false);
         ResponseEntity<Response> responseEntity = userController.resetPassword(resetPasswordDto, token);
-        Assert.assertEquals(responseEntity.getBody().getMessage(),"User password reset successful");
+        Assert.assertEquals(responseEntity.getBody().getMessage(),"User password reset unsuccessful");
     }
 
 }

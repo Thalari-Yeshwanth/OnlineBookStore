@@ -1,15 +1,17 @@
 package com.bridgelabz.exception;
 
-import lombok.AllArgsConstructor;
-
-@AllArgsConstructor
 public class CartException extends Exception{
 
-    private String message;
+    public ExceptionType type;
+
+
+    public CartException(String message, ExceptionType type) {
+        super(message);
+        this.type=type;
+    }
 
     public enum ExceptionType {
         EMPTY_CART
     }
-    public ExceptionType type;
 
 }

@@ -1,4 +1,5 @@
 package com.bridgelabz.service;
+
 import com.bridgelabz.exception.BookException;
 import com.bridgelabz.exception.CartException;
 import com.bridgelabz.model.Book;
@@ -16,14 +17,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.mockito.stubbing.OngoingStubbing;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class CartServiceTest {
@@ -117,12 +116,27 @@ public class CartServiceTest {
         List<Cart> cartList=new ArrayList<>();
         cartList.add(cart);
         when(cartRepository.findByUserId(1234567L)).thenReturn(cartList);
-        Optional<Book>  book1 = Optional.of(new Book("1",1,"Chetan Bhagat","The Girl in Room 105'","http://books.google.com/books/content?id=GHt_uwEACAAJ&printsec=frontcover&img=1&zoom=5'",12,100.0,"xyz"));
+        Optional<Book>  book1 = Optional.of(new Book("1",1,"Chetan Bhagat","The Girl in Room 105'","http://books.google.com/books/content?id=GHt_uwEACAAJ&printsec=frontcover&img=1&zoom=5'",2,100.0,"xyz"));
         when(bookStoreRepository.findById(bookId)).thenReturn(book1);
         List<Cart> cartList1 = cartService.addMoreItems(bookId, token);
         long quantity = cartList1.get(0).getQuantity();
         Assert.assertEquals(book.getQuantity()+1,quantity);
     }
+
+    @Test
+    public void givenCartRepository_WhenAddMoreQuantity_ShouldReturnUpdatedCart1() {
+        Book book=new Book("1",1L,"JK Rowling","Two States","Two States", 1, 200.0,"abc");
+        Book book1=new Book("1",1L,"JK Rowling","Two States","Two States", 2, 200.0,"abc");
+        Cart cart=new Cart(book);
+        List<Cart> cartList=new ArrayList<>();
+        cartList.add(cart);
+        when(cartRepository.findByUserId(book.getBookId())).thenReturn(cartList);
+        when(bookStoreRepository.findById(book.getBookId())).thenReturn(Optional.of(book1));
+        String token = JwtGenerator.createJWT(1234567l);
+        cartService.addMoreItems(123456l,token);
+
+    }
+
     @Test
     public void givenCartRepository_WhenSubtractQuantity_shouldReturnUpdatedCart() {
         Long bookId=1L;
@@ -163,10 +177,13 @@ public class CartServiceTest {
         List<Cart> cartList=new ArrayList<>();
         cartList.add(cart);
         when(cartRepository.findByUserId(1234567L)).thenReturn(cartList);
-        List<Cart> cartList1 = cartService.removeItem(bookId, token);
-        System.out.println(cartList1);
-        Assert.assertEquals(cartList1.size(),1);
-
+        List<Cart> cartList1 = null;
+        try {
+            cartList1 = cartService.removeItem(bookId, token);
+            Assert.assertEquals(cartList1.size(),1);
+        } catch (CartException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
@@ -217,15 +234,35 @@ public class CartServiceTest {
     public void addTOWishList() throws BookException {
         String token = JwtGenerator.createJWT(1234567L);
         long id = JwtGenerator.decodeJWT(token);
-        Book book=new Book("1",3L,"JK Rowling","Two States","Two States", 2, 200.0,"abc");
+        Book book=new Book("1",2L,"JK Rowling","Two States","Two States", 2, 200.0,"abc");
         Cart cart=new Cart(11,3L,2,200.0,"Harry Porter","Jk Rowling","http:/","abc",new UserModel(),false);
+        Cart cart1=new Cart(12,4L,2,200.0,"Harry Porter","Jk Rowling","http:/","abc",new UserModel(),false);
         List<Book> bookList=new ArrayList<>();
         Optional<UserModel> userDetails = Optional.of(new UserModel(1234567L,"ThalariYeshwanth","yeshwanththalri1998@gmail.com","9666924586","154G5a0123@",true,bookList));
-        Mockito.when(cartRepository.findByUserIdAndBookId(id,3L)).thenReturn(cart);
-        Mockito.when(cartRepository.findduplicatebookId(3L)).thenReturn(1L);
-        Mockito.when(bookStoreRepository.findById(3L)).thenReturn(Optional.of(book));
+        Optional<Book> book1 = Optional.of(new Book("1",3L,"JK Rowling","Two States","Two States", 2, 200.0,"abc"));
+        Mockito.when(cartRepository.findByUserIdAndBookId(id,cart.getBookId())).thenReturn(cart1);
+        Mockito.when(cartRepository.findDuplicateBookId(cart.getBookId())).thenReturn(cart.getBookId());
+        Mockito.when(bookStoreRepository.findById(book.getBookId())).thenReturn(book1);
         Mockito.when(userRepository.findById(id)).thenReturn(userDetails);
-        Response response = cartService.addToWishList(3L, token);
+        Response response = cartService.addToWishList(book.getBookId(), token);
        Assert.assertEquals(response.getMessage(),"Book added to WishList");
     }
+
+    @Test
+    public void givenCartRepository_WhenRemoveBook_ShouldThrowException() {
+        Long bookId=1L;
+        String token = JwtGenerator.createJWT(1234567);
+        Book book=new Book("1",1L,"JK Rowling","Two States","Two States", 2, 200.0,"abc");
+        Cart cart=new Cart(book);
+        List<Cart> cartList1=new ArrayList<>();
+        when(cartRepository.findByUserId(1234567L)).thenReturn(cartList1);
+        try {
+            cartList1 = cartService.removeItem(bookId, token);
+            Assert.assertEquals(cartList1.size(),1);
+        } catch (CartException e) {
+            System.out.println("not removed");
+            e.printStackTrace();
+        }
+    }
+
 }

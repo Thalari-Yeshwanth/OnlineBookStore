@@ -32,7 +32,7 @@ public class UserService implements IUserService {
     private RabbitMQSender rabbitMQSender;
 
 
-    private static final String VERIFICATION_URL = "http://localhost:8080/user/verify/";
+    private static final String VERIFICATION_URL = "http://localhost:3000/verify/";
     private static final String RESETPASSWORD_URL = "http://localhost:8080/user/resetpassword?token=";
 
 
